@@ -1,0 +1,255 @@
+@charset "UTF-8";
+/* 
+  JP：provider画面共通レイアウト（Figma風）
+  CN：企业端页面通用布局（Figma 风格）
+*/
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Arial; }
+
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr; /* 左：sidebar / 右：内容 */
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background: #fff;
+  border-right: 1px solid #eee;
+  padding: 28px 22px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-logo {
+  font-size: 44px;
+  font-weight: 700;
+  color: #f0a26b; /* 你Figma那种橙色感 */
+  margin-bottom: 36px;
+}
+
+.menu { display: flex; flex-direction: column; gap: 22px; }
+.menu-item {
+  text-decoration: none;
+  color: #111;
+  font-size: 34px;
+  font-weight: 600;
+}
+.menu-item:hover { opacity: .75; }
+/* 
+  JP：現在のページ（選択中メニュー）の見た目
+  CN：当前页面（选中菜单）的样式
+*/
+.menu-item.active {
+  position: relative;
+  opacity: 1;
+}
+
+/* 左侧一个小竖条，像很多管理后台那样 */
+.menu-item.active::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 34px;
+  border-radius: 999px;
+  background: #f0a26b; /* 不强制颜色，你也可以换成品牌橙 */
+}
+
+.menu-item.disabled { opacity: .35; cursor: not-allowed; }
+
+.contact-card{
+  margin-top: 56px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+.contact-title { font-size: 26px; margin-bottom: 14px; }
+.contact-row { display:flex; align-items:center; gap: 12px; }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #e9e9e9;
+}
+.company-name { font-size: 22px; font-weight: 600; }
+.logout-icon { margin-left:auto; opacity:.6; }
+
+/* ===== Content ===== */
+.content {
+  background: #efefef; /* Figma 右侧灰底 */
+  padding: 22px 28px;
+}
+
+.content-inner {
+  background: #fff;
+  border-radius: 18px;
+  padding: 26px 34px;
+  min-height: calc(100vh - 44px);
+}
+
+/* header */
+.content-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 18px;
+}
+.page-title{
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.search-box{
+  background:#fff;
+  border-radius: 999px;
+  padding: 10px 14px;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  width: 280px;
+  border: 1px solid #eee;
+}
+.search-box input{
+  border:none;
+  outline:none;
+  width: 100%;
+  font-size: 14px;
+}
+.search-icon{ opacity:.6; }
+/* JP：ログアウトボタン / CN：登出按钮 */
+/*.logout-btn{*/
+/*  margin-left: auto;*/
+/*  text-decoration: none;*/
+/*  display: inline-flex;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  width: 34px;*/
+/*  height: 34px;*/
+/*  border-radius: 10px;*/
+/*  border: 1px solid #eee;*/
+/*  background: #fff;*/
+/*  opacity: .75;*/
+/*}*/
+
+/*.logout-btn:hover{*/
+/*  opacity: 1;*/
+/*}*/
+.logout-btn{
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fff;
+  cursor: pointer;
+  transition: transform .08s ease, background .12s ease;
+}
+
+.logout-btn:hover{
+  background: #f6f6f6;
+}
+
+.logout-btn:active{
+  transform: scale(0.98);
+}
+
+/* 图标颜色跟随文字颜色（currentColor） */
+.logout-icon{
+  color: #6b6b6b;
+}
+.logout-btn:hover .logout-icon{
+  color: #333;
+}
+/* =========================
+   JP：商品画像サムネイル（一覧用）
+   CN：商品列表缩略图
+   - 固定尺寸，不拉伸
+   - 居中裁切
+   ========================= */
+.thumb{
+  width: 72px;            /* 缩略图宽度：你可改 64/80 */
+  height: 72px;           /* 缩略图高度 */
+  display: block;         /* 避免 inline 图片下面多出空隙 */
+  object-fit: cover;      /* 关键：保持比例 + 超出部分裁切 */
+  object-position: center;/* 裁切时居中 */
+  border-radius: 10px;    /* 圆角，和你整体风格一致 */
+  border: 1px solid #eee; /* 轻边框 */
+  background: #fafafa;    /* 图片透明/加载时也好看 */
+}
+/* =========================
+   JP：サイドバーのメニュー文字を小さくする（ロゴは維持）
+   CN：缩小侧边栏菜单字体（保留 FoodLink logo 大小）
+   ========================= */
+
+/* 侧边栏整体默认字号（影响菜单/卡片等） */
+.sidebar {
+  font-size: 16px; /* 你可以改 15/14 */
+}
+
+/* 菜单项（ホーム/在庫管理等） */
+.sidebar .menu a,
+.sidebar nav a,
+.sidebar .nav a {
+  font-size: 22px;      /* 现在太大就降到 20~24 之间 */
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* 选中项也跟着缩小（如果你有 active 类） */
+.sidebar .menu a.active,
+.sidebar .menu li.active a {
+  font-size: 22px;
+}
+/* JP：contactカードを少し小さく / CN：左下 contact 卡片字体缩小 */
+.sidebar .contact-card {
+  font-size: 14px;
+  margin-top: auto;
+  margin-bottom: 24px; /* 底部留白，可调 */
+}
+
+.sidebar .contact-card .contact-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sidebar .contact-card .company-name {
+  font-size: 18px;
+  font-weight: 700;
+}
+/* =========================
+   JP：contact-card をサイドバー最下部に固定（Flex）
+   CN：把 contact-card 固定在侧边栏底部（Flex）
+   ========================= */
+
+   /* =========================
+      JP：空状態（予約がない時）
+      CN：空状态（没有预约时）
+      ========================= */
+   .empty-state{
+     padding: 28px;
+     border: 1px dashed #e6e6e6;
+     border-radius: 16px;
+     background: #fafafa;
+     margin-top: 18px;
+   }
+
+   .empty-title{
+     font-size: 18px;
+     font-weight: 800;
+     margin-bottom: 6px;
+   }
+
+   .empty-sub{
+     font-size: 13px;
+     color: #666;
+   }
+

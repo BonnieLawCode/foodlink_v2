@@ -1,0 +1,172 @@
+@charset "UTF-8";
+/* JP：受取者側 共通レイアウト / CN：受取者端通用布局 */
+
+/* 全体 */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+  background: #f6e4c9; /* 你图里的暖色背景 느낌 */
+}
+
+/* ===== Topbar (固定・半透明) ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.72); /* 半透明 */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 1000;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  text-decoration: none;
+  color: #111;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 700;
+}
+
+.toplink {
+  text-decoration: none;
+  color: #111;
+}
+
+.welcome {
+  color: #111;
+  font-weight: 700;
+}
+
+/* ===== Main content (ヘッダー分の余白) ===== */
+.page {
+  padding-top: 84px; /* topbar 64px + 余白 */
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ===== Drawer ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1001;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 320px;
+  max-width: 86vw;
+  background: #fff;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.18);
+
+  transform: translateX(-105%);
+  transition: transform 0.22s ease;
+  z-index: 1002;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-head {
+  padding: 18px;
+  border-bottom: 1px solid #eee;
+}
+
+.drawer-brand {
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 22px;
+  color: #111;
+}
+
+.drawer-menu {
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-item {
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #111;
+  font-weight: 700;
+}
+
+.drawer-item:hover {
+  background: #f5f5f5;
+}
+
+/* ===== 下面是主页占位壳（你后面会替换成真实组件）===== */
+.panel {
+  max-width: 1040px;
+  margin: 0 auto 16px auto;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.grid3 {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  min-height: 340px;
+}
+
+.img-placeholder {
+  height: 180px;
+  border-radius: 14px;
+  background: #e6e6e6;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
