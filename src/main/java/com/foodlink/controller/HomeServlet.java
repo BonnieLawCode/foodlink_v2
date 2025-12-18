@@ -48,8 +48,8 @@ public class HomeServlet extends HttpServlet {
 					.forward(request, response);
 		} else {
 			System.out.println("個人ユーザー登録");
-			request.getRequestDispatcher("/WEB-INF/views/receiver/index.jsp")
-					.forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/receiver/home");
+
 		}
 		/********************
 		JP：未ログイン時の遷移先（今は“強制ログイン方針”のため基本的に使わない）

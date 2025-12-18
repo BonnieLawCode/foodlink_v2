@@ -6,7 +6,7 @@
   <div class="topbar-left">
     <%-- JP：ハンバーガー / CN：汉堡菜单按钮 --%>
     <button type="button" class="icon-btn" id="menuBtn" aria-label="menu">☰</button>
-    <a class="brand" href="${ctx}/home">Food Link</a>
+    <a class="brand" href="${ctx}/home">もったいナビ</a>
   </div>
 
   <div class="topbar-right">

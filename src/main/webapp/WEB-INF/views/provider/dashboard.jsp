@@ -23,7 +23,7 @@ request.setAttribute("activeMenu", "home");
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ホーム | FoodLink</title>
+<title>ホーム | もったいナビ</title>
 
 <%--
     JP：共通レイアウトCSS（あなたの配置：webapp/assets/css/）

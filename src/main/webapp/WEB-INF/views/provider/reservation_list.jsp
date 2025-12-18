@@ -19,10 +19,10 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>予約一覧 | FoodLink</title>
+<title>予約一覧 | もったいナビ</title>
 
 <%-- 共通レイアウトCSS / 通用布局CSS --%>
-<link rel="stylesheet" href="${ctx}/assets/css/provider-layout.css?v=1">
+<link rel="stylesheet" href="${ctx}/assets/css/provider-layout.css?v=2">
 
 <%-- ページ専用CSS（先空でもOK）/ 页面专用CSS（可先不写） --%>
 <link rel="stylesheet" href="${ctx}/css/provider-reservation-list.css">

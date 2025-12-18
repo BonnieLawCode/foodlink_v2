@@ -8,7 +8,7 @@
 
 <aside class="sidebar">
 	<div class="brand">
-		<div class="brand-logo">FoodLink</div>
+		<div class="brand-logo">もったいナビ</div>
 	</div>
 
 	<nav class="menu">

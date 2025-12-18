@@ -6,7 +6,7 @@
 
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <a class="drawer-brand" href="${ctx}/home">Food Link</a>
+    <a class="drawer-brand" href="${ctx}/home">もったいナビ</a>
   </div>
 
   <nav class="drawer-menu">

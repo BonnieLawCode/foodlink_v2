@@ -36,7 +36,7 @@ request.setAttribute("activeMenu", "food_list");
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>在庫管理 | FoodLink</title>
+<title>在庫管理 | もったいナビ</title>
 
 <%-- 
     JP：共通レイアウトCSS（あなたの配置：webapp/assets/css/）
@@ -167,22 +167,20 @@ img {
 
 									<td><c:choose>
 											<c:when test="${not empty f.imagePath}">
-												<%--
+		<%--
         JP：DBの imagePath がある場合はそれを表示
         CN：DB 里有 imagePath 就显示它
         ※ ただしファイルが存在しない(404)場合もあるので onerror でデフォルト画像へ
         ※ 但可能文件不存在(404)，所以用 onerror 自动换默认图
-      --%>
+        --%>
 												<img class="thumb" src="${ctx}${f.imagePath}" alt="food"
 													onerror="this.onerror=null; this.src='${ctx}/assets/img/noimage.jpg';">
 											</c:when>
 
 											<c:otherwise>
-												<%--
-        JP：imagePath が無い場合もデフォルト画像を表示
-        CN：没有 imagePath 时也显示默认图
-      --%>
-												<img class="thumb" src="${ctx}/assets/img/noimage.jpg" alt="no image">
+		<%-- JP：imagePath が無い場合もデフォルト画像を表示 CN：没有 imagePath 时也显示默认图 --%>
+												<img class="thumb" src="${ctx}/assets/img/noimage.jpg"
+													alt="no image">
 											</c:otherwise>
 										</c:choose></td>
 
@@ -214,13 +212,10 @@ img {
 
 									<%-- 受け取り時間 / 取货时间（格式化显示） --%>
 									<td><c:choose>
-											<c:when
-												test="${not empty f.pickupStart and not empty f.pickupEnd}">
-												<fmt:formatDate value="${f.pickupStart}"
-													pattern="yyyy/MM/dd HH:mm" />
-                    ～
-                    <fmt:formatDate value="${f.pickupEnd}"
-													pattern="yyyy/MM/dd HH:mm" />
+											<c:when test="${not empty f.pickupStart and not empty f.pickupEnd}">
+												<fmt:formatDate value="${f.pickupStart}" pattern="yyyy/MM/dd HH:mm" />
+												～
+												<fmt:formatDate value="${f.pickupEnd}" pattern="yyyy/MM/dd HH:mm" />
 											</c:when>
 
 											<c:when
@@ -232,7 +227,8 @@ img {
 											<c:otherwise>
 												<span class="muted">未設定</span>
 											</c:otherwise>
-										</c:choose></td>
+										</c:choose>
+									</td>
 
 									<%-- 登録日 / 创建时间（格式化显示） --%>
 									<td><c:choose>

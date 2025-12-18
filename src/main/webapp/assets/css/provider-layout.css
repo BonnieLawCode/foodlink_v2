@@ -26,8 +26,8 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Arial; }
 }
 
 .brand-logo {
-  font-size: 44px;
-  font-weight: 700;
+  font-size: 35px;
+  font-weight: 500;
   color: #f0a26b; /* 你Figma那种橙色感 */
   margin-bottom: 36px;
 }

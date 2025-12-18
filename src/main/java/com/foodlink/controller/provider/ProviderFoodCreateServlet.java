@@ -139,7 +139,12 @@ public class ProviderFoodCreateServlet extends HttpServlet {
             return null;
         }
 
-        String uploadDirReal = getServletContext().getRealPath("/uploads/products");
+        
+       // JP：アプリ外の固定ディレクトリに保存（再起動しても消えない）
+       // CN：保存到项目外固定目录（重启/重新部署也不会丢）
+       String uploadDirReal = "D:/foodlink_uploads/uploads/products";
+       
+
         File dir = new File(uploadDirReal);
         if (!dir.exists())
             dir.mkdirs();
@@ -148,6 +153,7 @@ public class ProviderFoodCreateServlet extends HttpServlet {
         File saveFile = new File(dir, safeName);
 
         imagePart.write(saveFile.getAbsolutePath());
+        
 
         // 存进 DB 的相对路径（以后页面直接 <img src="${ctx}${image_path}">）
         return "/uploads/products/" + safeName;

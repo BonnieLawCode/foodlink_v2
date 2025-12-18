@@ -3,170 +3,599 @@
 
 /* 全体 */
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
-  background: #f6e4c9; /* 你图里的暖色背景 느낌 */
+	margin: 0;
+	font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+	background: #f6e4c9;
+	/* 你图里的暖色背景 느낌 */
 }
 
 /* ===== Topbar (固定・半透明) ===== */
 .topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
 
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+	height: 64px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
-  padding: 0 18px;
-  background: rgba(255, 255, 255, 0.72); /* 半透明 */
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  z-index: 1000;
+	padding: 0 18px;
+	background: rgba(255, 255, 255, 0.40);
+	/* 半透明 */
+	backdrop-filter: blur(10px);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	z-index: 1000;
 }
 
 .topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }
 
 .brand {
-  text-decoration: none;
-  color: #111;
-  font-weight: 800;
-  font-size: 20px;
+	font-size: 22px;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-decoration: none;
+	color: #f28c28;
+	display: inline-flex;
+	align-items: center;
+	position: relative;
 }
 
 .icon-btn {
-  border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
+	border: none;
+	background: transparent;
+	font-size: 22px;
+	cursor: pointer;
 }
 
 .topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-weight: 700;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	font-weight: 700;
 }
 
 .toplink {
-  text-decoration: none;
-  color: #111;
+	text-decoration: none;
+	color: #111;
 }
 
 .welcome {
-  color: #111;
-  font-weight: 700;
+	color: #111;
+	font-weight: 700;
 }
 
 /* ===== Main content (ヘッダー分の余白) ===== */
 .page {
-  padding-top: 84px; /* topbar 64px + 余白 */
-  padding-left: 16px;
-  padding-right: 16px;
+	padding-top: 84px;
+	/* topbar 64px + 余白 */
+	padding-left: 16px;
+	padding-right: 16px;
 }
 
 /* ===== Drawer ===== */
 .overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 1001;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.35);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+	z-index: 1001;
 }
 
 .overlay.show {
-  opacity: 1;
-  pointer-events: auto;
+	opacity: 1;
+	pointer-events: auto;
 }
 
 .drawer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 320px;
-  max-width: 86vw;
-  background: #fff;
-  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.18);
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 320px;
+	max-width: 86vw;
+	background: #fff;
+	box-shadow: 6px 0 20px rgba(0, 0, 0, 0.18);
 
-  transform: translateX(-105%);
-  transition: transform 0.22s ease;
-  z-index: 1002;
+	transform: translateX(-105%);
+	transition: transform 0.22s ease;
+	z-index: 1002;
 }
 
 .drawer.open {
-  transform: translateX(0);
+	transform: translateX(0);
 }
 
 .drawer-head {
-  padding: 18px;
-  border-bottom: 1px solid #eee;
+	padding: 18px;
+	border-bottom: 1px solid #eee;
 }
 
 .drawer-brand {
-  text-decoration: none;
-  font-weight: 900;
-  font-size: 22px;
-  color: #111;
+	text-decoration: none;
+	font-weight: 900;
+	font-size: 22px;
+	color: #f28c28;
 }
 
 .drawer-menu {
-  padding: 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+	padding: 12px 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .drawer-item {
-  padding: 12px 14px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: #111;
-  font-weight: 700;
+	padding: 12px 14px;
+	border-radius: 12px;
+	text-decoration: none;
+	color: #111;
+	font-weight: 700;
 }
 
 .drawer-item:hover {
-  background: #f5f5f5;
+	background: #f5f5f5;
 }
 
-/* ===== 下面是主页占位壳（你后面会替换成真实组件）===== */
+/* ===== 本文）===== */
+
 .panel {
-  max-width: 1040px;
-  margin: 0 auto 16px auto;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 18px;
-  padding: 18px;
+	width: min(1100px, calc(100% - 48px));
+	margin: 0 auto;
 }
 
+/* ===== 搜索框 ===== */
+.search-box {
+	background: #fff;
+	border: 2px solid #e5e5e5;
+	border-radius: 16px;
+	padding: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	align-items: flex-end;
+	margin-bottom: 22px;
+}
+
+.search-box .field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.search-box .label {
+	font-weight: 800;
+	font-size: 13px;
+}
+
+.search-box input,
+.search-box select {
+	padding: 10px 12px;
+	border-radius: 12px;
+	border: 1px solid #ddd;
+	min-width: 180px;
+	background: #fff;
+}
+
+.search-box .actions {
+	display: flex;
+	gap: 10px;
+	margin-left: auto;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-outline {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 14px;
+	border-radius: 12px;
+	font-weight: 800;
+	border: 1px solid #ddd;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.btn-primary {
+	background: #fff;
+}
+
+.btn-secondary {
+	background: #fff;
+}
+
+/* ===== 3列Grid ===== */
 .grid3 {
-  max-width: 1040px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18px;
 }
 
+/* 画面狭い时自动变两列/一列 */
+@media (max-width: 980px) {
+	.grid3 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 640px) {
+	.grid3 {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ===== 卡片 ===== */
 .card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 18px;
-  padding: 14px;
-  min-height: 340px;
+	background: #fff;
+	border: 2px solid #e5e5e5;
+	border-radius: 18px;
+	padding: 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-height: 420px;
+	/* 让三张卡高度更统一，可按需调整 */
 }
 
-.img-placeholder {
-  height: 180px;
-  border-radius: 14px;
-  background: #e6e6e6;
-  border: 1px solid #ddd;
-  margin-bottom: 12px;
+.thumb {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	/* 贴近你图里的比例 */
+	border-radius: 14px;
+	background: #f3f3f3;
+	overflow: hidden;
+	border: 1px solid #eee;
+}
+
+.thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* 分类/剩余 */
+.meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.badge {
+	font-size: 12px;
+	font-weight: 800;
+	background: #eee;
+	padding: 6px 10px;
+	border-radius: 999px;
+}
+
+.remain {
+	font-size: 12px;
+	background: #eee;
+	padding: 6px 10px;
+	border-radius: 999px;
+}
+
+/* 标题/描述 */
+.title {
+	font-size: 18px;
+	font-weight: 900;
+	margin: 2px 0 0;
+}
+
+.desc {
+	color: #666;
+	font-size: 13px;
+	line-height: 1.5;
+	height: 40px;
+	overflow: hidden;
+}
+
+/* 价格 */
+.price {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+}
+
+.price .normal {
+	color: #999;
+	text-decoration: line-through;
+	font-weight: 800;
+}
+
+.price .offer {
+	font-weight: 900;
+}
+
+/* 受取信息 */
+.info {
+	font-size: 12px;
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+/* JP：カード内ボタンエリア / CN：卡片按钮区域 */
+.card-actions {
+	display: flex;
+	gap: 12px;
+	margin-top: 14px;
+}
+
+/* JP：FoodLink専用ボタン共通 / CN：FoodLink专用按钮基础 */
+.fl-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 999px;
+	font-weight: 800;
+	text-decoration: none;
+	border: 1px solid transparent;
+	cursor: pointer;
+	user-select: none;
+	transition: filter .15s ease, background .15s ease;
+}
+
+/* JP：詳細（グレー）/ CN：详情按钮（灰色） */
+.fl-btn-detail {
+	color: #666;
+	background: #fff;
+	border-color: #d8d8d8;
+}
+
+.fl-btn-detail:hover {
+	background: #f5f5f5;
+}
+
+/* JP：予約（FoodLinkオレンジ）/ CN：预约按钮（FoodLink橙色） */
+.fl-btn-reserve {
+	color: #fff;
+	background: #f39a60;
+	border-color: #f39a60;
+}
+
+.fl-btn-reserve:hover {
+	filter: brightness(0.95);
+}
+
+/* 两个按钮等宽 */
+.card-actions .fl-btn {
+	flex: 1;
+}
+
+/* ===== FoodLink Detail Page (Receiver) ===== */
+/* ===== Receiver Food Detail (v2 layout) ===== */
+
+.fl-detail-top {
+	margin-bottom: 16px;
+}
+
+.fl-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.fl-detail2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	/* ✅ 左右宽度大体一致 */
+	gap: 28px;
+	align-items: start;
+}
+
+/* 左侧图片 */
+.fl-detail2__img {
+	width: 100%;
+	height: 340px;
+	object-fit: cover;
+	border-radius: 14px;
+	display: block;
+	background: rgba(0, 0, 0, 0.04);
+}
+
+/* 右侧信息 */
+.fl-detail2__right {
+	min-width: 0;
+}
+
+/* 第一行：标题 + 右侧库存 */
+.fl-detail2__row1 {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: baseline;
+}
+
+.fl-detail2__title {
+	margin: 0;
+	line-height: 1.25;
+	font-size: 28px;
+}
+
+.fl-detail2__stock {
+	font-size: 12px;
+	opacity: 0.8;
+	white-space: nowrap;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.04);
+}
+
+/* 第二行：价格 */
+.fl-detail2__price {
+	margin-top: 12px;
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+	flex-wrap: wrap;
+}
+
+.fl-price-normal {
+	opacity: 0.65;
+	text-decoration: line-through;
+	/* ✅ 弱化通常价格 */
+}
+
+.fl-price-arrow {
+	opacity: 0.5;
+}
+
+.fl-price-offer {
+	font-weight: 800;
+	font-size: 20px;
+}
+
+/* 区块 */
+.fl-detail2__block {
+	margin-top: 18px;
+}
+
+.fl-detail2__h {
+	margin: 0 0 10px;
+	font-size: 16px;
+}
+
+.fl-detail2__text {
+	margin: 0;
+	line-height: 1.9;
+	white-space: pre-line;
+	/* ✅ 保留换行 */
+}
+
+/* 受取信息行 */
+.fl-info-line {
+	margin: 8px 0;
+	line-height: 1.8;
+}
+
+.fl-info-k {
+	font-weight: 600;
+	display: inline-block;
+	width: 110px;
+	opacity: 0.75;
+	white-space: nowrap;
+}
+
+.fl-info-v {
+	min-width: 0;
+	line-height: 1.8;
+	word-break: break-word;
+}
+
+.fl-map-link {
+	margin-left: 10px;
+	font-size: 12px;
+	opacity: 0.7;
+	text-decoration: underline;
+	cursor: default;
+}
+
+/* 按钮区 */
+.fl-detail2__actions {
+	margin-top: 22px;
+	display: flex;
+	justify-content: center;
+}
+
+.fl-detail2__actions .fl-btn {
+	min-width: 260px;
+	text-align: center;
+}
+
+.fl-info-list {
+	display: grid;
+	gap: 12px;
+	margin-top: 10px;
+}
+
+.fl-info-row {
+	display: grid;
+	grid-template-columns: 120px 1fr;
+	/* 左：标题固定宽度 */
+	gap: 14px;
+	align-items: start;
+}
+
+.fl-time {
+	font-weight: 400;
+}
+
+/* Back link 返回键(FoodLink theme) */
+.fl-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+
+	padding: 10px 14px;
+	border-radius: 999px;
+
+	text-decoration: none;
+	font-weight: 700;
+	font-size: 14px;
+
+	/* 温柔的底色 + 细边框 */
+	background: rgba(255, 255, 255, 0.65);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+
+	/* 默认文字颜色（跟随主题，偏深） */
+	color: rgba(0, 0, 0, 0.78);
+
+	transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.fl-back:hover {
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+	transform: translateY(-1px);
+}
+
+.fl-back:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
+
+/* 键盘可访问性（JP: フォーカス / CN: 焦点高亮） */
+.fl-back:focus-visible {
+	outline: 3px solid rgba(245, 146, 59, 0.35);
+	/* FoodLink 橙色系的柔和高亮 */
+	outline-offset: 2px;
+}
+
+.fl-back__icon {
+	font-size: 16px;
+	line-height: 1;
+	color: rgba(245, 146, 59, 0.9);
+	/* 橙色点缀 */
+}
+
+
+
+/* 手机端：上下布局 */
+@media (max-width: 800px) {
+	.fl-detail2 {
+		grid-template-columns: 1fr;
+	}
+
+	.fl-detail2__img {
+		height: 260px;
+	}
+
+	.fl-info-k {
+		width: auto;
+		margin-right: 8px;
+	}
 }

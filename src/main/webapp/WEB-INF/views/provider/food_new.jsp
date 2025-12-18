@@ -16,7 +16,7 @@ request.setAttribute("pageTitle", "新規商品登録");
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>新規商品登録 | FoodLink</title>
+<title>新規商品登録 | もったいナビ</title>
 <%-- 共通レイアウトCSS / 通用布局CSS --%>
 <link rel="stylesheet" href="${ctx}/assets/css/provider-layout.css?v=1">
 
