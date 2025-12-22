@@ -85,6 +85,7 @@ public class LoginServlet extends HttpServlet {
 				String userName = rs.getString("name");
 				String role = rs.getString("role");
 				session.setAttribute("role", role);
+				
 				// JP：商家なら会社名も保存（sidebar表示用）
 				// CN：如果是商家，把店名/公司名也存进去（用于 sidebar 显示）
 				if ("PROVIDER".equals(role)) {
@@ -92,6 +93,7 @@ public class LoginServlet extends HttpServlet {
 				}
 				if ("RECEIVER".equals(role)) {
 					session.setAttribute("userName", userName); // user name
+					
 				}
 				//转发到下一个HomeServlet继续处理
 

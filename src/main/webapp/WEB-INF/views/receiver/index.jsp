@@ -24,6 +24,57 @@
 	<%-- JP：本文 / CN：主体 --%>
 	<main class="page">
 		<div class="panel">
+			<!-- ===== Banner Slider (JP: バナー / CN: 轮播) ===== -->
+			<section class="fl-slider" aria-label="もったいナビのお知らせ">
+				<div class="fl-slider__viewport" id="flSlider">
+
+					<!-- Slide 1 -->
+					<a class="fl-slide is-active" href="${ctx}/receiver/home"> <img
+						src="${ctx}/assets/img/banner01.jpg" alt="もったいナビ">
+						<div class="fl-slide__content">
+							<p class="fl-slide__eyebrow">もったいナビ</p>
+							<h2 class="fl-slide__title">
+								食品ロスを減らす<br>やさしい受け取り
+							</h2>
+							<p class="fl-slide__desc">近くのお店で、今日中に受け取れる食品を見つけよう</p>
+						</div>
+					</a>
+
+					<!-- Slide 2 -->
+					<a class="fl-slide" href="${ctx}/receiver/home"> <img
+						src="${ctx}/assets/img/banner02.jpg" alt="今週の特集">
+						<div class="fl-slide__content">
+							<p class="fl-slide__eyebrow">今週の特集</p>
+							<h2 class="fl-slide__title">
+								夕方受け取り<br>おすすめ特集
+							</h2>
+							<p class="fl-slide__desc">パン・お弁当・惣菜が、夕方からお得に</p>
+						</div>
+					</a>
+
+					<!-- Slide 3 -->
+					<a class="fl-slide" href="${ctx}/receiver/home"> <img
+						src="${ctx}/assets/img/banner03.jpg" alt="使い方">
+						<div class="fl-slide__content">
+							<p class="fl-slide__eyebrow">かんたん3ステップ</p>
+							<h2 class="fl-slide__title">
+								探す・予約・<br>受け取るだけ
+							</h2>
+							<p class="fl-slide__desc">面倒な手続きはありません</p>
+						</div>
+					</a>
+
+					<!-- dots -->
+					<div class="fl-dots" id="flDots">
+						<button type="button" class="fl-dot is-active"></button>
+						<button type="button" class="fl-dot"></button>
+						<button type="button" class="fl-dot"></button>
+					</div>
+
+				</div>
+			</section>
+
+
 
 			<%-- 検索ボックス / 搜索框 --%>
 			<form class="search-box" method="get" action="${ctx}/receiver/home">
@@ -156,6 +207,8 @@
 	</main>
 	<%-- JP：ドロワーJS / CN：抽屉JS --%>
 	<script src="${ctx}/assets/js/receiver-drawer.js?v=1"></script>
+	<script src="${ctx}/assets/js/receiver-slider.js?v=1" defer></script>
+	
 
 
 </body>

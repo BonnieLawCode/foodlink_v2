@@ -300,9 +300,8 @@ public class FoodDao {
 
 		return list;
 	}
-	
-	
-    // 商品详情页面：根据商品id查询
+
+	// 商品详情页面：根据商品id查询
 	public Food findById(int id) {
 
 		// ⚠️【日本語】カラム名はあなたのDB定義に合わせて修正してください
@@ -378,6 +377,31 @@ public class FoodDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	// JP：在庫を減らす（在庫が足りる時だけ）
+	// CN：扣库存（只有库存足够时才成功）
+	// 返回：true=扣成功 / false=库存不足或商品不存在
+	public boolean decreaseQuantityIfEnough(int foodId, int qty) {
+		String sql = """
+				    UPDATE foods
+				    SET quantity = quantity - ?
+				    WHERE id = ? AND quantity >= ?
+				""";
+
+		try (Connection con = DBUtil.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, qty);
+			ps.setInt(2, foodId);
+			ps.setInt(3, qty);
+
+			int updated = ps.executeUpdate();
+			return updated == 1;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

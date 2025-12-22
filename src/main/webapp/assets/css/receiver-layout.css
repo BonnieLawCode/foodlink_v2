@@ -599,3 +599,418 @@ body {
 		margin-right: 8px;
 	}
 }
+
+/* ===== Banner Slider ===== */
+.fl-slider {
+	margin: 12px 0 18px;
+}
+
+.fl-slider__viewport {
+	position: relative;
+	border-radius: 16px;
+	overflow: hidden;
+	background: rgba(0, 0, 0, 0.04);
+}
+
+/* 单张 slide */
+.fl-slide {
+	display: none;
+	text-decoration: none;
+}
+
+.fl-slide.is-active {
+	display: block;
+}
+
+.fl-slide img {
+	width: 100%;
+	height: 220px;
+	object-fit: cover;
+	display: block;
+}
+
+/* 圆点 */
+.fl-dots {
+	position: absolute;
+	left: 50%;
+	bottom: 10px;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 8px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.65);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.fl-dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 999px;
+	border: 0;
+	background: rgba(0, 0, 0, 0.25);
+	cursor: pointer;
+	padding: 0;
+}
+
+.fl-dot.is-active {
+	background: rgba(242, 140, 40, 0.9);
+	/* 你的橙色主题 */
+}
+
+/* 手机端高度更小 */
+@media (max-width: 800px) {
+	.fl-slide img {
+		height: 160px;
+	}
+}
+
+/* ===== Banner with Text Overlay ===== */
+
+.fl-slide {
+	position: relative;
+	display: none;
+}
+
+.fl-slide.is-active {
+	display: block;
+}
+
+.fl-slide img {
+	width: 100%;
+	height: clamp(260px, 26vw, 420px);
+	/* ✅ 自动随屏幕变化 */
+	object-fit: cover;
+	display: block;
+}
+
+/* 半透明渐变遮罩，让文字清晰 */
+.fl-slide::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to right,
+			rgba(0, 0, 0, 0.45),
+			rgba(0, 0, 0, 0.10),
+			rgba(0, 0, 0, 0.00));
+}
+
+/* 文字容器 */
+.fl-slide__content {
+	position: absolute;
+	left: 28px;
+	top: 46%;
+	transform: translateY(-50%);
+	max-width: 420px;
+
+	color: #fff;
+	z-index: 1;
+}
+
+/* 小标题 */
+.fl-slide__eyebrow {
+	margin: 0 0 6px;
+	font-size: 12px;
+	letter-spacing: .12em;
+	opacity: 0.85;
+}
+
+/* 主标题 */
+.fl-slide__title {
+	margin: 0 0 10px;
+	font-size: 28px;
+	line-height: 1.3;
+	font-weight: 800;
+}
+
+/* 说明文字 */
+.fl-slide__desc {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.7;
+	opacity: 0.9;
+}
+
+/* hover 时整体轻微提亮 */
+.fl-slide:hover img {
+	filter: brightness(1.05);
+}
+
+/* slide fade-in animation (optional) */
+.fl-slide.is-fade {
+	animation: flFadeIn .28s ease;
+}
+
+@keyframes flFadeIn {
+	from {
+		opacity: .65;
+		transform: translateY(2px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* =========================
+   Reserve / Complete page CSS
+   JP：予約画面用
+   CN：预约页面专用
+========================= */
+
+.fl-page-title {
+	text-align: center;
+	font-size: 22px;
+	margin: 8px 0 18px;
+}
+
+/* 复用：详情页同款两列布局（左右宽度接近一致） */
+.fl-detail2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 28px;
+	align-items: start;
+}
+
+/* 左侧图 */
+.fl-detail2__img {
+	width: 100%;
+	height: 360px;
+	/* 你想更“饱满”，这里固定高度更稳 */
+	object-fit: cover;
+	border-radius: 16px;
+	display: block;
+}
+
+/* 右侧信息 */
+.fl-detail2__titleRow {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.fl-detail2__title {
+	font-size: 30px;
+	margin: 0;
+	line-height: 1.15;
+}
+
+.fl-detail2__priceRow {
+	margin-top: 10px;
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+}
+
+.fl-price-normal {
+	color: #777;
+	text-decoration: line-through;
+}
+
+.fl-price-offer {
+	font-weight: 800;
+	font-size: 22px;
+}
+
+/* 信息块 */
+.fl-infoBlock {
+	margin-top: 18px;
+}
+
+.fl-infoBlock__title {
+	font-weight: 800;
+	margin: 12px 0 8px;
+}
+
+/* 关键：小标题换行、两列对齐更舒服 */
+.fl-kv {
+	display: grid;
+	grid-template-columns: 110px 1fr;
+	/* 左列固定宽，右列自适应 */
+	gap: 10px 16px;
+	padding: 10px 0;
+	border-bottom: 1px dashed rgba(0, 0, 0, 0.10);
+}
+
+.fl-kv__k {
+	color: #555;
+	font-weight: 700;
+	white-space: nowrap;
+	/* 保持“受取場所”等不拆字 */
+}
+
+.fl-kv__v {
+	color: #222;
+	line-height: 1.6;
+}
+
+/* 数量选择 */
+.fl-qty {
+	height: 34px;
+	padding: 0 10px;
+	border-radius: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	background: #fff;
+}
+
+.fl-stock {
+	margin-left: 10px;
+	color: #4c8d4c;
+	font-size: 13px;
+}
+
+.fl-map-link {
+	margin-left: 10px;
+	font-size: 13px;
+	color: #2d6cdf;
+	text-decoration: underline;
+}
+
+/* 按钮居中 */
+.fl-detail2__actions {
+	margin-top: 18px;
+}
+
+.fl-center {
+	display: flex;
+	justify-content: center;
+}
+
+.fl-btn-wide {
+	min-width: 260px;
+}
+
+/* 完成页布局 */
+.fl-complete {
+	display: grid;
+	justify-items: center;
+	gap: 18px;
+	padding: 34px 0 20px;
+}
+
+.fl-complete__card {
+	width: min(680px, 92%);
+	background: #fff;
+	border: 2px solid rgba(255, 153, 51, 0.55);
+	border-radius: 16px;
+	box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+	padding: 26px 28px;
+}
+
+.fl-complete__title {
+	text-align: center;
+	font-weight: 900;
+	color: #ff8a2a;
+	font-size: 20px;
+	margin-bottom: 16px;
+}
+
+.fl-complete__rows {
+	display: grid;
+	gap: 10px;
+}
+
+.fl-row {
+	display: grid;
+	grid-template-columns: 110px 1fr;
+	gap: 12px;
+}
+
+.fl-row__k {
+	color: #666;
+	font-weight: 700;
+}
+
+.fl-row__v {
+	color: #111;
+	font-weight: 600;
+}
+
+.fl-complete__actions {
+	display: flex;
+	gap: 14px;
+	justify-content: center;
+}
+
+/* 注意事项 */
+.fl-note {
+	margin-top: 18px;
+	color: #555;
+	font-size: 13px;
+}
+
+.fl-note__title {
+	font-weight: 800;
+	margin-bottom: 6px;
+}
+
+.fl-note ul {
+	margin: 0;
+	padding-left: 18px;
+}
+
+.fl-note--center {
+	width: min(680px, 92%);
+}
+
+/* 响应式：窄屏变上下 */
+@media (max-width: 900px) {
+	.fl-detail2 {
+		grid-template-columns: 1fr;
+	}
+
+	.fl-detail2__img {
+		height: 280px;
+	}
+}
+
+/* 合計金額ブロック */
+.fl-total {
+	margin-top: 18px;
+	padding: 14px 16px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, .55);
+	border: 1px solid rgba(0, 0, 0, .06);
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
+.fl-total__label {
+	font-weight: 800;
+	color: #444;
+}
+
+.fl-total__value {
+	font-weight: 900;
+	font-size: 24px;
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+}
+
+.fl-total__tax {
+	font-size: 12px;
+	opacity: .7;
+	font-weight: 700;
+}
+
+
+/* 手机端适配 */
+@media (max-width: 800px) {
+	.fl-slide img {
+		height: 200px;
+	}
+
+	.fl-slide__content {
+		left: 16px;
+		max-width: 260px;
+	}
+
+	.fl-slide__title {
+		font-size: 20px;
+	}
+}
