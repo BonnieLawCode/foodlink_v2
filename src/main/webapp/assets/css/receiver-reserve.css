@@ -1,0 +1,232 @@
+/* receiver-reserve.css */
+
+/* 数量输入框样式 */
+.fl-qty-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 150px;
+}
+
+.fl-qty-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.fl-qty-input:focus {
+  outline: none;
+  border-color: #ff9800;
+  box-shadow: 0 0 4px rgba(255, 152, 0, 0.3);
+}
+
+.fl-qty-input:invalid {
+  border-color: #f44336;
+}
+
+/* 验证信息提示 */
+.fl-qty-msg,
+.fl-time-msg {
+  display: none;
+  font-size: 13px;
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  min-height: 16px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* 有内容时才显示 */
+.fl-qty-msg:not(:empty),
+.fl-time-msg:not(:empty) {
+  display: block;
+}
+
+.fl-qty-msg.success,
+.fl-time-msg.success {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.fl-qty-msg.error,
+.fl-time-msg.error {
+  color: #c62828;
+  background-color: #ffebee;
+}
+
+/* 受取時間输入框样式 */
+.fl-pickup-time {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.fl-pickup-time:focus {
+  outline: none;
+  border-color: #ff9800;
+  box-shadow: 0 0 4px rgba(255, 152, 0, 0.3);
+}
+
+.fl-pickup-time:invalid {
+  border-color: #f44336;
+}
+
+/* 兼容移动设备 */
+@media (max-width: 768px) {
+  .fl-qty-input,
+  .fl-pickup-time {
+    font-size: 16px; /* 防止iOS自动放大 */
+  }
+
+  .fl-pickup-time {
+    max-width: 100%;
+  }
+}
+
+/* 总金额样式 */
+.fl-total {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  border-radius: 4px;
+}
+
+.fl-total__label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.fl-total__value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff9800;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.fl-total__tax {
+  font-size: 12px;
+  color: #999;
+  font-weight: normal;
+}
+
+/* 按钮样式 */
+.fl-btn-reserve {
+  background-color: #ff9800;
+  color: white;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.fl-btn-reserve:hover {
+  background-color: #f57c00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fl-btn-reserve:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 次要按钮（灰色背景，格式与 fl-btn-reserve 一致） */
+.fl-btn-secondary {
+  background-color: #f5f5f5;
+  color: #666;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.fl-btn-secondary:hover {
+  background-color: #eeeeee;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fl-btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.fl-btn-wide {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* cancel button and status */
+.fl-btn-cancel {
+  background-color: #fff;
+  color: #c62828;
+  border: 1px solid #f2a4a4;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.fl-btn-cancel.disabled,
+.fl-btn-cancel[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.fl-status-cell { font-weight: 700; }
+.fl-status-cancelled { color: #c62828; }
+.fl-status-reserved { color: #ff9800; }
+.fl-status-completed { color: #2e7d32; }
+
+/* 中心对齐 */
+.fl-center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 注意事项 */
+.fl-note {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  border-left: 4px solid #999;
+}
+
+.fl-note__title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.fl-note ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.fl-note li {
+  margin-bottom: 6px;
+}

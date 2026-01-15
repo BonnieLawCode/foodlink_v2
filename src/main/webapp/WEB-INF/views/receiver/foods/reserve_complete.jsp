@@ -61,12 +61,11 @@
 				</div>
 
 				<div class="fl-complete__actions">
-					<a class="fl-btn fl-btn-detail fl-btn-wide"
-						href="${ctx}/receiver/home">ホームに戻る</a> <a
-						class="fl-btn fl-btn-reserve fl-btn-wide"
-						href="${ctx}/receiver/history">予約履歴を見る</a>
-				</div>
-
+				<a class="fl-btn fl-btn-secondary fl-btn-wide"
+					href="${ctx}/receiver/home">ホームに戻る</a>
+				<a class="fl-btn fl-btn-reserve fl-btn-wide"
+					href="${ctx}/receiver/history">予約履歴を見る</a>
+			</div>
 				<div class="fl-note fl-note--center">
 					<div class="fl-note__title">【注意事項】</div>
 					<ul>

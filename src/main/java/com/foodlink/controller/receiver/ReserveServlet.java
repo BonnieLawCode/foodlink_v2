@@ -47,7 +47,7 @@ public class ReserveServlet extends HttpServlet {
             return;
         }
 
-        int receiverId = userId; 
+        int receiverId = userId;
         System.out.println("receiverId" + receiverId);
 
         // 2) 读取 food
@@ -73,7 +73,7 @@ public class ReserveServlet extends HttpServlet {
 
         // JSP：/WEB-INF/views/receiver/foods/reserve.jsp
         req.getRequestDispatcher("/WEB-INF/views/receiver/foods/reserve.jsp")
-           .forward(req, resp);
+                .forward(req, resp);
     }
 
     @Override
@@ -89,14 +89,29 @@ public class ReserveServlet extends HttpServlet {
 
         Integer receiverId = (Integer) session.getAttribute("receiverId");
         System.out.println(receiverId);
-        if (receiverId == null) receiverId = (Integer) session.getAttribute("userId");
+        if (receiverId == null)
+            receiverId = (Integer) session.getAttribute("userId");
         if (receiverId == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        int foodId = parseInt(req.getParameter("foodId"), -1);
-        int qty = parseInt(req.getParameter("qty"), 1);
+        // 记录收到的 POST 参数以便调试
+        String pFoodId = req.getParameter("foodId");
+        String pId = req.getParameter("id");
+        String pQty = req.getParameter("qty");
+        String pPickupTime = req.getParameter("pickupTime");
+        String pTotal = req.getParameter("totalPrice");
+        System.out.println("ReserveServlet POST params: foodId=" + pFoodId + ", id=" + pId + ", qty=" + pQty
+                + ", pickupTime=" + pPickupTime + ", totalPrice=" + pTotal);
+
+        int foodId = parseInt(pFoodId, -1);
+        // 如果前端传的是 id 而不是 foodId，回退处理
+        if (foodId <= 0) {
+            foodId = parseInt(pId, -1);
+        }
+
+        int qty = parseInt(pQty, 1);
 
         if (foodId <= 0 || qty <= 0) {
             resp.sendRedirect(req.getContextPath() + "/receiver/home");
@@ -112,10 +127,21 @@ public class ReserveServlet extends HttpServlet {
         // 单价用特价（price_offer）
         int unitPrice = f.getPriceOffer();
 
-        // pickupTime：这里给你两种策略：
-        // A) 先不让用户选，直接存 NULL（最小可行）
-        // B) 让用户选 datetime-local（reserve.jsp里我已预留 hidden/可扩展）
+        // pickupTime：从前端接收 datetime-local（格式: yyyy-MM-dd'T'HH:mm）
         Timestamp pickupTime = null;
+        String pickupTimeStr = req.getParameter("pickupTime");
+        if (pickupTimeStr != null && !pickupTimeStr.isEmpty()) {
+            try {
+                // 前端为 datetime-local，形如 2025-12-22T15:30
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                LocalDateTime ldt = LocalDateTime.parse(pickupTimeStr, dtf);
+                pickupTime = Timestamp.valueOf(ldt);
+            } catch (Exception ex) {
+                // 解析失败时继续使用 null（或根据需求返回错误）
+                System.err.println("pickupTime parse error: " + pickupTimeStr + " -> " + ex.getMessage());
+                pickupTime = null;
+            }
+        }
 
         // 创建预约（内部会扣库存 + insert + 生成 reservation_code）
         int reservationId = reservationDao.createReservation(foodId, receiverId, qty, unitPrice, pickupTime);
@@ -128,12 +154,17 @@ public class ReserveServlet extends HttpServlet {
     // helpers
     // =========================
     private int parseInt(String s, int def) {
-        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return def;
+        }
     }
 
     private String buildPickupLabel(Timestamp start, Timestamp end) {
 
-        if (start == null || end == null) return "（時間未設定）";
+        if (start == null || end == null)
+            return "（時間未設定）";
 
         LocalDateTime s = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime e = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();

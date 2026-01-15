@@ -65,6 +65,9 @@
 						action="${ctx}/receiver/reserve">
 						<input type="hidden" id="flTotalHidden" name="totalPrice"
 							value="0">
+						<!-- hidden identifiers for backend -->
+						<input type="hidden" name="foodId" value="${food.id}" />
+						<input type="hidden" name="id" value="${food.id}" />
 
 						<div class="fl-infoBlock">
 							<div class="fl-infoBlock__title">【商品情報】</div>
@@ -72,17 +75,12 @@
 							<div class="fl-kv">
 								<div class="fl-kv__k">数量</div>
 								<div class="fl-kv__v">
-									<select id="flQty" class="fl-qty" name="qty">
-										<!-- 最小可行：最多列 1~min(10,库存) -->
-										<c:set var="maxQ" value="${food.quantity}" />
-										<c:if test="${maxQ > 10}">
-											<c:set var="maxQ" value="10" />
-										</c:if>
-
-										<c:forEach var="i" begin="1" end="${maxQ}">
-											<option value="${i}">${i}</option>
-										</c:forEach>
-									</select> <span class="fl-stock">在庫：${food.quantity}${food.unit}</span>
+									<div class="fl-qty-wrapper">
+										<input type="number" id="flQty" name="qty" class="fl-qty-input" 
+											min="1" max="10" value="1" />
+										<span id="flQtyMsg" class="fl-qty-msg"></span>
+									</div>
+									<span class="fl-stock">在庫：${food.quantity}${food.unit}</span>
 								</div>
 							</div>
 
@@ -95,8 +93,17 @@
 							</div>
 
 							<div class="fl-kv">
-								<div class="fl-kv__k">受取時間</div>
+								<div class="fl-kv__k">受取可能時間</div>
 								<div class="fl-kv__v">${pickupLabel}</div>
+							</div>
+
+							<div class="fl-kv">
+								<div class="fl-kv__k">受取時間</div>
+								<div class="fl-kv__v">
+									<input type="datetime-local" id="flPickupTime" name="pickupTime" 
+										class="fl-pickup-time" required />
+									<span id="flTimeMsg" class="fl-time-msg"></span>
+								</div>
 							</div>
 
 							<div class="fl-kv">
@@ -143,12 +150,15 @@
 	</main>
 	<script>
 		// JSP -> JS：单价（这里用特价/单价）
-		window.FL_UNIT_PRICE = $
-		{
-			food.priceOffer
-		};
+		window.FL_UNIT_PRICE = ${food.priceOffer};
+		window.FL_MAX_QTY = ${food.quantity};
+		window.FL_PICKUP_LABEL = '${pickupLabel}';
+		window.FL_FOOD_ID = ${food.id};
+		
+		// 解析受取可能時間范围（格式: "2025-12-17 15:20～23:18" 或 "YYYY-MM-DD HH:MM～HH:MM"）
+		window.FL_PICKUP_RANGE = '${pickupLabel}';
 	</script>
-	<script src="${ctx}/assets/js/receiver-reserve.js?v=1"></script>
+	<script src="${ctx}/assets/js/receiver-reserve.js?v=3"></script>
 
 </body>
 </html>
