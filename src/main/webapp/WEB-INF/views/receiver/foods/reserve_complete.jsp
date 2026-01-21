@@ -42,7 +42,12 @@
 
 						<div class="fl-row">
 							<div class="fl-row__k">受取場所</div>
-							<div class="fl-row__v">${rv.pickupLocation}</div>
+							<div class="fl-row__v">
+								<c:choose>
+									<c:when test="${not empty rv.companyAddress}">${rv.companyAddress}</c:when>
+									<c:otherwise><span class="muted">-</span></c:otherwise>
+								</c:choose>
+							</div>
 						</div>
 
 						<div class="fl-row">

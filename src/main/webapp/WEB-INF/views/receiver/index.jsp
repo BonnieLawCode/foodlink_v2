@@ -78,47 +78,72 @@
 
 			<%-- 検索ボックス / 搜索框 --%>
 			<form class="search-box" method="get" action="${ctx}/receiver/home">
+				<div class="search-bar">
+					<div class="search-seg is-flex">
+						<svg class="seg-icon" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" aria-hidden="true">
+							<circle cx="11" cy="11" r="7"></circle>
+							<line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+						</svg>
+						<input type="text" name="keyword" placeholder="パン・弁当・飲料"
+							value="${fn:escapeXml(keyword)}">
+					</div>
 
-				<div class="field">
-					<div class="label">キーワード</div>
-					<input type="text" name="keyword" placeholder="例：パン／弁当／飲料"
-						value="${fn:escapeXml(keyword)}">
+					<span class="seg-divider"></span>
+
+					<div class="search-seg">
+						<div class="seg-select">
+							<select name="category">
+								<option value="" <c:if test="${empty category}">selected</c:if>>すべて</option>
+								<option value="弁当" <c:if test="${category=='弁当'}">selected</c:if>>弁当</option>
+								<option value="パン" <c:if test="${category=='パン'}">selected</c:if>>パン</option>
+								<option value="惣菜" <c:if test="${category=='惣菜'}">selected</c:if>>惣菜</option>
+								<option value="飲料" <c:if test="${category=='飲料'}">selected</c:if>>飲料</option>
+								<option value="その他"
+									<c:if test="${category=='その他'}">selected</c:if>>その他</option>
+							</select>
+						</div>
+					</div>
+
+					<span class="seg-divider"></span>
+
+					<div class="search-seg is-flex">
+						<svg class="seg-icon" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" aria-hidden="true">
+							<path d="M12 21s7-7.4 7-12a7 7 0 1 0-14 0c0 4.6 7 12 7 12z"></path>
+							<circle cx="12" cy="9" r="2.5"></circle>
+						</svg>
+						<input type="text" name="area" placeholder="大阪駅 / 梅田"
+							value="${fn:escapeXml(area)}">
+					</div>
+
+					<span class="seg-divider"></span>
+
+					<div class="search-seg">
+						<div class="seg-select">
+							<select name="sort">
+								<option value="new"
+									<c:if test="${empty sort || sort=='new'}">selected</c:if>>新着順</option>
+								<option value="price"
+									<c:if test="${sort=='price'}">selected</c:if>>価格順</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="search-actions">
+						<a class="btn-reset" href="${ctx}/receiver/home" aria-label="リセット">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+								stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+								aria-hidden="true">
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+							</svg>
+						</a>
+						<button type="submit" class="btn-primary">検索する</button>
+					</div>
 				</div>
-
-				<div class="field">
-					<div class="label">カテゴリ</div>
-					<select name="category">
-						<option value="" <c:if test="${empty category}">selected</c:if>>すべて</option>
-						<option value="弁当" <c:if test="${category=='弁当'}">selected</c:if>>弁当</option>
-						<option value="パン" <c:if test="${category=='パン'}">selected</c:if>>パン</option>
-						<option value="惣菜" <c:if test="${category=='惣菜'}">selected</c:if>>惣菜</option>
-						<option value="飲料" <c:if test="${category=='飲料'}">selected</c:if>>飲料</option>
-						<option value="その他"
-							<c:if test="${category=='その他'}">selected</c:if>>その他</option>
-					</select>
-				</div>
-
-				<div class="field">
-					<div class="label">エリア（駅・地区）</div>
-					<input type="text" name="area" placeholder="例：大阪駅／梅田"
-						value="${fn:escapeXml(area)}">
-				</div>
-
-				<div class="field">
-					<div class="label">並び替え</div>
-					<select name="sort">
-						<option value="new"
-							<c:if test="${empty sort || sort=='new'}">selected</c:if>>新着順</option>
-						<option value="price"
-							<c:if test="${sort=='price'}">selected</c:if>>価格順</option>
-					</select>
-				</div>
-
-				<div class="actions">
-					<button type="submit" class="btn-primary">この条件で検索</button>
-					<a class="btn-secondary" href="${ctx}/receiver/home">条件をクリア</a>
-				</div>
-
 			</form>
 
 			<%-- 商品カード（3列）/ 三列卡片 --%>
@@ -134,6 +159,9 @@
 
 
 					<article class="card">
+						<a class="card-link-overlay"
+							href="${ctx}/receiver/foods/detail?id=${f.id}"
+							aria-label="${f.name}"></a>
 
 						<div class="thumb">
 							<c:choose>
@@ -153,6 +181,14 @@
 						</div>
 
 						<h3 class="title">${f.name}</h3>
+						<div class="card-shop">
+							<c:choose>
+								<c:when test="${not empty f.companyName}">
+									<c:out value="${f.companyName}" />
+								</c:when>
+								<c:otherwise>-</c:otherwise>
+							</c:choose>
+						</div>
 
 						<p class="desc">
 							<c:out value="${f.description}" />
@@ -170,27 +206,37 @@
 						<div class="info">
 							<div>
 								受取場所：
-								<c:out value="${f.pickupLocation}" />
+								<c:choose>
+									<c:when test="${not empty f.companyAddress}">
+										<c:out value="${f.companyAddress}" />
+									</c:when>
+									<c:otherwise>-</c:otherwise>
+								</c:choose>
 							</div>
 							<div>
 								受取可能：
+								<c:set var="startDate"
+									value="${fn:substring(f.pickupStart, 0, 10)}" />
+								<c:set var="endDate"
+									value="${fn:substring(f.pickupEnd,   0, 10)}" />
+								<c:set var="startHM"
+									value="${fn:substring(f.pickupStart, 11, 16)}" />
+								<c:set var="endHM"
+									value="${fn:substring(f.pickupEnd,   11, 16)}" />
+
 								<c:choose>
-									<c:when test="${f.pickupEnd != null}">
-										<fmt:formatDate value="${f.pickupEnd}" pattern="MM/dd HH:mm" /> まで
+									<%-- 同一天：显示「本日 14:15～22:20」 --%>
+									<c:when test="${startDate == endDate}">
+										<span class="fl-time">本日 ${startHM}～${endHM}</span>
 									</c:when>
-									<c:otherwise>未設定</c:otherwise>
+
+									<%-- 跨天：显示完整日期时间（备用） --%>
+									<c:otherwise>
+										<span class="fl-time">${startDate}
+											${startHM}～${endDate} ${endHM}</span>
+									</c:otherwise>
 								</c:choose>
 							</div>
-						</div>
-
-
-
-
-						<div class="card-actions">
-							<a class="fl-btn fl-btn-detail"
-								href="${ctx}/receiver/foods/detail?id=${f.id}">詳細を見る</a> <a
-								class="fl-btn fl-btn-reserve"
-								href="${ctx}/receiver/reserve?id=${f.id}">予約へ進む</a>
 						</div>
 
 					</article>

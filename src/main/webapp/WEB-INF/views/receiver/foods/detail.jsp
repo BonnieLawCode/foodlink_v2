@@ -30,7 +30,7 @@
 			</div>
 
 			<!-- ✅ 主体：左图右信息，宽度大体一致 -->
-			<section class="fl-detail2">
+			<section class="fl-detail2 fl-detail2--detail">
 
 				<!-- 左：图片 -->
 				<div class="fl-detail2__left">
@@ -54,9 +54,29 @@
 
 					<!-- ① 第一行：商品名 + 右侧小字剩余数量 -->
 					<div class="fl-detail2__row1">
-						<h1 class="fl-detail2__title">
+						<div class="fl-detail2__headline">
+							<h1 class="fl-detail2__title">
 							<c:out value="${f.name}" />
-						</h1>
+							</h1>
+							<a class="fl-shop-link" href="#" onclick="return false;">
+								<span class="fl-shop-logo" aria-hidden="true">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+										viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+										width="18" height="18">
+										<path stroke-linecap="round" stroke-linejoin="round"
+											d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+									</svg>
+								</span>
+								<span class="fl-shop-name">
+									<c:choose>
+										<c:when test="${not empty f.companyName}">
+											<c:out value="${f.companyName}" />
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</span>
+							</a>
+						</div>
 						<div class="fl-detail2__stock">
 							残り
 							<c:out value="${f.quantity}" />
@@ -66,21 +86,26 @@
 
 					<!-- ② 第二行：价格，突出显示特别价格 -->
 					<div class="fl-detail2__price">
-						<span class="fl-price-normal"> 通常価格： <c:choose>
+						<div class="fl-price-current">
+							<span class="fl-price-label">特別価格</span>
+							<span class="fl-price-offer">¥<c:out value="${f.priceOffer}" /></span>
+						</div>
+						<div class="fl-price-was">
+							<span class="fl-price-label">通常価格</span>
+							<c:choose>
 								<c:when test="${f.priceNormal != null}">
-                  ¥<c:out value="${f.priceNormal}" />
+									<span class="fl-price-normal">¥<c:out value="${f.priceNormal}" /></span>
 								</c:when>
-								<c:otherwise>—</c:otherwise>
+								<c:otherwise>
+									<span class="fl-price-normal is-empty">—</span>
+								</c:otherwise>
 							</c:choose>
-						</span> <span class="fl-price-arrow">→</span> <span
-							class="fl-price-offer"> 特別価格：¥<c:out
-								value="${f.priceOffer}" />
-						</span>
+						</div>
 					</div>
 
 					<!-- ③ 第三部分：商品说明（保留换行显示） -->
 					<div class="fl-detail2__block">
-						<h2 class="fl-detail2__h">【商品説明】</h2>
+						<p class="fl-detail2__section-title">商品説明</p>
 						<!-- white-space: pre-line 用 CSS 来保留换行 -->
 						<p class="fl-detail2__text">
 							<c:out value="${f.description}" />
@@ -89,14 +114,21 @@
 
 					<!-- ④ 第四部分：受取情报 -->
 					<div class="fl-detail2__block">
-						<h2 class="fl-detail2__h">【受取情報】</h2>
+						<p class="fl-detail2__section-title">受取情報</p>
 
 						<div class="fl-info-list">
 
 							<div class="fl-info-row">
 								<div class="fl-info-k">受取場所</div>
 								<div class="fl-info-v">
-									<c:out value="${f.pickupLocation}" />
+									<c:choose>
+										<c:when test="${not empty f.companyAddress}">
+											<c:out value="${f.companyAddress}" />
+										</c:when>
+										<c:otherwise>
+											<span class="muted">-</span>
+										</c:otherwise>
+									</c:choose>
 									<a class="fl-map-link" href="#" aria-disabled="true"
 										onclick="return false;"> → Google Maps（準備中） </a>
 								</div>

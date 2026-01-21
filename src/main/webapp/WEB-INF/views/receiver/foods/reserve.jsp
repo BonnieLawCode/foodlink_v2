@@ -29,7 +29,7 @@
 
 			<h1 class="fl-page-title">予約内容の確認</h1>
 
-			<div class="fl-detail2">
+			<div class="fl-detail2 fl-detail2--reserve">
 				<!-- 左：图片 -->
 				<div class="fl-detail2__left">
 					<c:choose>
@@ -42,6 +42,14 @@
 								alt="no image" />
 						</c:otherwise>
 					</c:choose>
+					<div class="fl-note">
+						<div class="fl-note__title">【注意事項】</div>
+						<ul>
+							<li>受取時間を過ぎるとキャンセル扱いとなる可能性があります。</li>
+							<li>予約後のキャンセルは原則できません。</li>
+							<li>受取時のお支払いとなります。必ず現金をご用意ください。</li>
+						</ul>
+					</div>
 				</div>
 
 				<!-- 右：信息 -->
@@ -87,8 +95,11 @@
 							<div class="fl-kv">
 								<div class="fl-kv__k">受取場所</div>
 								<div class="fl-kv__v">
-									${food.pickupLocation} <span class="fl-map-link">→
-										Google Maps（準備中）</span>
+									<c:choose>
+										<c:when test="${not empty food.companyAddress}">${food.companyAddress}</c:when>
+										<c:otherwise><span class="muted">-</span></c:otherwise>
+									</c:choose>
+									<span class="fl-map-link">→ Google Maps（準備中）</span>
 								</div>
 							</div>
 
@@ -119,28 +130,21 @@
 								</div>
 							</div>
 						</div>
-						<!-- 合計（自動計算） -->
-						<div class="fl-total">
-							<div class="fl-total__label">合計金額</div>
-							<div class="fl-total__value">
-								<span id="flTotalYen">¥0</span> <span class="fl-total__tax">（税込）</span>
+						<div class="fl-reserve-bottom">
+							<!-- 合計（自動計算） -->
+							<div class="fl-total">
+								<div class="fl-total__label">合計金額</div>
+								<div class="fl-total__value">
+									<span id="flTotalYen">¥0</span> <span class="fl-total__tax">（税込）</span>
+								</div>
+							</div>
+
+							<!-- 主按钮：居中 -->
+							<div class="fl-detail2__actions fl-center">
+								<button class="fl-btn fl-btn-reserve fl-btn-wide" type="submit">予約を確定する</button>
 							</div>
 						</div>
 
-
-						<!-- 主按钮：居中 -->
-						<div class="fl-detail2__actions fl-center">
-							<button class="fl-btn fl-btn-reserve fl-btn-wide" type="submit">予約を確定する</button>
-						</div>
-
-						<div class="fl-note">
-							<div class="fl-note__title">【注意事項】</div>
-							<ul>
-								<li>受取時間を過ぎるとキャンセル扱いとなる可能性があります。</li>
-								<li>予約後のキャンセルは原則できません。</li>
-								<li>受取時のお支払いとなります。必ず現金をご用意ください。</li>
-							</ul>
-						</div>
 					</form>
 
 				</div>

@@ -53,6 +53,13 @@ public class ReceiverHistoryServlet extends HttpServlet {
 
 		if (receiverId != null) {
 			ReservationDao dao = new ReservationDao();
+			// JP：一覧表示前に期限切れを反映 / CN：列表显示前先刷新过期状态
+			int graceMinutes = readGraceMinutes(request);
+			try {
+				dao.expireOverdueReservations(graceMinutes);
+			} catch (Exception e) {
+				// JP：一覧表示は継続 / CN：即使失败也继续显示列表
+			}
 			List<ReservationView> reservations = dao.findByReceiverId(receiverId);
 			request.setAttribute("reservations", reservations);
 		}
@@ -68,6 +75,18 @@ public class ReceiverHistoryServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+
+	private int readGraceMinutes(HttpServletRequest request) {
+		String v = request.getServletContext().getInitParameter("expire.graceMinutes");
+		if (v == null) {
+			return 15;
+		}
+		try {
+			return Integer.parseInt(v.trim());
+		} catch (Exception e) {
+			return 15;
+		}
 	}
 
 }

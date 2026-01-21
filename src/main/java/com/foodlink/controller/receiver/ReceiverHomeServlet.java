@@ -40,23 +40,14 @@ public class ReceiverHomeServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 
-		/**JP：強制ログインチェック  CN：强制登录检查**/
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("userName") == null) {
-			// JP：未ログインならログイン画面へ / CN：未登录跳转登录页
-			response.sendRedirect(request.getContextPath() + "/login");
-			return;
-		}
 		/**JP：検索パラメータ（今はUIだけ先に用意。SQLは最小でOK）**/
 		String keyword = request.getParameter("keyword");
 		String category = request.getParameter("category");
 		String area = request.getParameter("area");
 		String sort = request.getParameter("sort"); // "new" or "price"
 		/**「OPEN の商品一覧」をDBから取得**/
-		// JP：トップは9件（3列×3行）だけ表示
-		int limit = 9;
 		FoodDao dao = new FoodDao();
-		List<Food> foodList = dao.findLatestOpenFoods(limit);
+		List<Food> foodList = dao.findOpenFoodsForReceiver(keyword, category, area, sort);
 
 		request.setAttribute("foodList", foodList);
 

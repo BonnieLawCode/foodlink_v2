@@ -95,8 +95,15 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("userName", userName); // user name
 					
 				}
-				//转发到下一个HomeServlet继续处理
+				// JP：ログイン前の元URLがあれば優先 / CN：若存在原始URL则优先返回
+				String redirectTo = (String) session.getAttribute("redirectTo");
+				if (redirectTo != null && !redirectTo.isEmpty()) {
+					session.removeAttribute("redirectTo");
+					response.sendRedirect(redirectTo);
+					return;
+				}
 
+				//转发到下一个HomeServlet继续处理
 				response.sendRedirect(request.getContextPath() + "/home");
 			}
 

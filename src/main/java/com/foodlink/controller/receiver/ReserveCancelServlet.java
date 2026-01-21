@@ -121,7 +121,8 @@ public class ReserveCancelServlet extends HttpServlet {
             // JP：受取時間を過ぎたらキャンセル不可 / CN：超过受取时间不可取消
             Timestamp now = new Timestamp(System.currentTimeMillis());
             if (!info.pickupTime.after(now)) {
-                System.out.println("[ReserveCancelServlet] pickup expired: pickupTime=" + info.pickupTime + ", now=" + now);
+                System.out.println(
+                        "[ReserveCancelServlet] pickup expired: pickupTime=" + info.pickupTime + ", now=" + now);
                 if (isAjax) {
                     writeJson(resp, false, "pickup_expired");
                 } else {

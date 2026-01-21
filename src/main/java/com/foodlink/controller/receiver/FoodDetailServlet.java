@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.foodlink.dao.FoodDao;
-import com.foodlink.model.Food;
+import com.foodlink.dao.FoodDao.FoodDetailView;
 
 /**
  * Servlet implementation class FoodDetailServlet
@@ -62,7 +62,7 @@ public class FoodDetailServlet extends HttpServlet {
         }
         
      // DBから1件取得
-        Food food = foodDao.findById(id);
+        FoodDetailView food = foodDao.findDetailWithCompany(id);
 
         if (food == null) {
             request.setAttribute("message", "商品が見つかりませんでした。");

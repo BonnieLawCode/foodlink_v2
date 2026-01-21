@@ -230,3 +230,22 @@
 .fl-note li {
   margin-bottom: 6px;
 }
+
+/* reserve layout: align note with total/button row */
+.fl-detail2--reserve {
+  align-items: stretch;
+}
+
+.fl-detail2--reserve .fl-detail2__left,
+.fl-detail2--reserve .fl-detail2__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.fl-detail2--reserve .fl-note {
+  margin-top: auto;
+}
+
+.fl-detail2--reserve .fl-reserve-bottom {
+  margin-top: auto;
+}

@@ -9,6 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.List;
+
+import com.foodlink.dao.FoodDao;
+import com.foodlink.model.Food;
+
 /**
  * Servlet implementation class HomeServlet
  */
@@ -29,45 +34,37 @@ public class HomeServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		request.setCharacterEncoding("UTF8");
 
+		// JP/CN: 判断是否企业用户，企业登录后直接进仪表盘；其他情况展示公开商品
 		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("userId") == null) {
-			response.sendRedirect(request.getContextPath() + "/login");
-			return;
+		if (session != null) {
+			String role = (String) session.getAttribute("role");
+			if ("PROVIDER".equals(role)) {
+				// JP：企業ユーザーはダッシュボードへ / CN：商家进入仪表盘
+				response.sendRedirect(request.getContextPath() + "/provider/dashboard");
+				return;
+			}
 		}
-		//从session取出role进行身份判断，登陆成功跳转到相应的页面    
-		String role = (String) session.getAttribute("role");
 
-		if ("PROVIDER".equals(role)) {
-			System.out.println("企業ユーザー登録");
+		// JP/CN: 个人用户或未登录时，都展示同一套公开商品（OPEN & 未过期 & 有库存）
+		String keyword = request.getParameter("keyword");
+		String category = request.getParameter("category");
+		String area = request.getParameter("area");
+		String sort = request.getParameter("sort"); // "new" or "price"
 
-			request.getRequestDispatcher("/WEB-INF/views/provider/dashboard.jsp")
-					.forward(request, response);
-		} else {
-			System.out.println("個人ユーザー登録");
-			response.sendRedirect(request.getContextPath() + "/receiver/home");
+		FoodDao dao = new FoodDao();
+		List<Food> foodList = dao.findOpenFoodsForReceiver(keyword, category, area, sort);
 
-		}
-		/********************
-		JP：未ログイン時の遷移先（今は“強制ログイン方針”のため基本的に使わない）
-		現在のFoodLinkは LoginServlet を入口にしており、ユーザーはログインしないと
-		 receiver/index.jsp や provider/dashboard.jsp に到達できない設計。
-		 そのため通常運用ではここに来ない（保険・将来拡張用の分岐）。
-		 将来的に「未ログインでも閲覧できるトップページ（商品検索・サービス説明）」を
-		     用意する場合は、/home 未ログインアクセスを top.jsp に forward して利用する。
-		
-		 CN：未登录时的跳转目的地（目前采用“强制登录策略”，基本不会走到这里）
-		 现在 FoodLink 的入口是 LoginServlet，用户不登录就无法进入
-		 receiver/index.jsp 或 provider/dashboard.jsp。
-		 因此正常使用时这里不会触发（属于保险/未来扩展预留）。
-		 如果将来要实现“未登录也能浏览的公共首页（商品检索/服务介绍）”，
-		 就可以把 /home 的未登录访问 forward 到 top.jsp 来启用该页面。
-		 *****************************/
-		// request.getRequestDispatcher("/WEB-INF/views/common/top.jsp")
-		//		        .forward(request, response);
+		request.setAttribute("foodList", foodList);
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("category", category);
+		request.setAttribute("area", area);
+		request.setAttribute("sort", sort);
+
+		// 无论登录与否都 forward 到同一首页
+		request.getRequestDispatcher("/WEB-INF/views/receiver/index.jsp")
+				.forward(request, response);
 
 	}
 

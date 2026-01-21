@@ -9,6 +9,7 @@ import java.sql.Timestamp;
  */
 public class Food {
 	private int id;
+    private int productId;
     private int providerId;
     private String name;
     private String description;
@@ -19,16 +20,22 @@ public class Food {
     private int priceOffer;
     private String currency;
     private Date expiryDate;         // 可为 null
-    private String pickupLocation;
     private Timestamp pickupStart;   // 可为 null
     private Timestamp pickupEnd;     // 可为 null
     private String imagePath;        // 可为 null
     private String status;
     private Timestamp createdAt;
+    // 店舗住所（company.address）。従来のpickup_location廃止後の表示用。SELECTに含まれない場合はnullのまま。
+    private String companyAddress;
+    // 店舗名（必要に応じて利用）。SELECTに含まれない場合はnull。
+    private String companyName;
 
     // ====== Getter / Setter（省略业务逻辑，只做数据承载）======
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public int getProductId() { return productId; }
+    public void setProductId(int productId) { this.productId = productId; }
 
     public int getProviderId() { return providerId; }
     public void setProviderId(int providerId) { this.providerId = providerId; }
@@ -60,9 +67,6 @@ public class Food {
     public Date getExpiryDate() { return expiryDate; }
     public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
 
-    public String getPickupLocation() { return pickupLocation; }
-    public void setPickupLocation(String pickupLocation) { this.pickupLocation = pickupLocation; }
-
     public Timestamp getPickupStart() { return pickupStart; }
     public void setPickupStart(Timestamp pickupStart) { this.pickupStart = pickupStart; }
 
@@ -77,5 +81,11 @@ public class Food {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public String getCompanyAddress() { return companyAddress; }
+    public void setCompanyAddress(String companyAddress) { this.companyAddress = companyAddress; }
+
+    public String getCompanyName() { return companyName; }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
 
 }

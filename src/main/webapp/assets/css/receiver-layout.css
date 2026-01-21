@@ -5,8 +5,8 @@
 body {
 	margin: 0;
 	font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
-	background: #f6e4c9;
-	/* 你图里的暖色背景 느낌 */
+	background: #F3EEE6;
+	/* JP：受取者ページ背景色 / CN：用户端页面背景色 */
 }
 
 /* ===== Topbar (固定・半透明) ===== */
@@ -151,65 +151,153 @@ body {
 	margin: 0 auto;
 }
 
-/* ===== 搜索框 ===== */
+/* ===== 搜索条（极简一行） ===== */
 .search-box {
-	background: #fff;
-	border: 2px solid #e5e5e5;
-	border-radius: 16px;
-	padding: 20px;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 14px;
-	align-items: flex-end;
 	margin-bottom: 22px;
 }
 
-.search-box .field {
+.search-bar {
 	display: flex;
-	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	background: #FFFEFC;
+	border: 1px solid #EEEAE3;
+	border-radius: 14px;
+	padding: 4px 6px;
+	min-height: 48px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.search-seg {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	white-space: nowrap;
+	padding: 0 10px;
+	height: 40px;
+}
+
+.search-seg.is-flex {
+	flex: 1 1 180px;
+}
+
+.seg-icon {
+	width: 16px;
+	height: 16px;
+	color: #666666;
+	flex: 0 0 auto;
+}
+
+.seg-divider {
+	width: 1px;
+	height: 20px;
+	background: #EEEAE3;
+}
+
+.search-bar input,
+.search-bar select {
+	border: none;
+	outline: none;
+	background: transparent;
+	font-size: 14px;
+	color: #333;
+	min-width: 120px;
+}
+
+.seg-select {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
 	gap: 6px;
+	padding-right: 16px;
 }
 
-.search-box .label {
-	font-weight: 800;
-	font-size: 13px;
+.seg-select::after {
+	content: "▼";
+	font-size: 11px;
+	color: #666666;
+	position: absolute;
+	right: 2px;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
 }
 
-.search-box input,
-.search-box select {
-	padding: 10px 12px;
-	border-radius: 12px;
-	border: 1px solid #ddd;
-	min-width: 180px;
-	background: #fff;
+.search-bar select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding-right: 12px;
 }
 
-.search-box .actions {
+.search-actions {
 	display: flex;
-	gap: 10px;
+	align-items: center;
+	gap: 6px;
 	margin-left: auto;
+	padding-right: 2px;
+	height: 40px;
 }
 
 .btn-primary,
-.btn-secondary,
 .btn-outline {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 10px 14px;
-	border-radius: 12px;
+	padding: 0 16px;
+	border-radius: 10px;
 	font-weight: 800;
 	border: 1px solid #ddd;
 	text-decoration: none;
 	cursor: pointer;
+	height: 40px;
 }
 
 .btn-primary {
-	background: #fff;
+	background: #f59e0b;
+	color: #fff;
+	border-color: #f59e0b;
 }
 
-.btn-secondary {
-	background: #fff;
+.btn-reset {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: none;
+	background: transparent;
+	color: #666666;
+	cursor: pointer;
+	text-decoration: none;
+	border-radius: 8px;
+}
+
+.btn-reset:hover {
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-reset svg {
+	width: 14px;
+	height: 14px;
+	stroke: currentColor;
+}
+
+@media (max-width: 980px) {
+	.search-bar {
+		flex-wrap: wrap;
+		border-radius: 12px;
+	}
+
+	.search-actions {
+		width: 100%;
+		justify-content: flex-end;
+		height: auto;
+	}
+
+	.seg-divider {
+		display: none;
+	}
 }
 
 /* ===== 3列Grid ===== */
@@ -234,15 +322,37 @@ body {
 
 /* ===== 卡片 ===== */
 .card {
-	background: #fff;
-	border: 2px solid #e5e5e5;
+	background: #FFFEFC;
+	border: 2px solid #EEEAE3;
 	border-radius: 18px;
-	padding: 14px;
+	padding: 12px;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	min-height: 420px;
+	gap: 8px;
+	min-height: 320px;
+	min-width: 0;
 	/* 让三张卡高度更统一，可按需调整 */
+	position: relative;
+	cursor: pointer;
+	transition: border-color .12s ease;
+}
+
+.card-link-overlay {
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	z-index: 2;
+	text-decoration: none;
+	display: block;
+}
+
+.card:hover {
+	border-color: #e4ded5;
+}
+
+.card > *:not(.card-link-overlay) {
+	position: relative;
+	z-index: 1;
 }
 
 .thumb {
@@ -290,12 +400,25 @@ body {
 	margin: 2px 0 0;
 }
 
+.card-shop {
+	font-size: 13px;
+	color: #666;
+	font-weight: 600;
+	margin-top: -4px;
+}
+
 .desc {
 	color: #666;
 	font-size: 13px;
 	line-height: 1.5;
-	height: 40px;
+	white-space: nowrap;
 	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+.card-actions {
+	display: none;
 }
 
 /* 价格 */
@@ -369,6 +492,41 @@ body {
 	filter: brightness(0.95);
 }
 
+/* JP：キャンセル（赤枠）/ CN：取消按钮（红框） */
+.fl-btn-cancel {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 36px;
+	padding: 0 14px;
+	background-color: #fff;
+	color: #c62828;
+	border: 1px solid #f2a4a4;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 700;
+}
+.fl-btn-cancel.disabled,
+.fl-btn-cancel[disabled] {
+	opacity: 0.5;
+	cursor: default;
+}
+
+/* JP：詳細（オレンジ）/ CN：详情按钮（橙底白字） */
+.fl-btn-detail-orange {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 36px;
+	padding: 0 14px;
+	background-color: #f39a60;
+	color: #fff;
+	border: 1px solid #f39a60;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 700;
+}
+
 /* 两个按钮等宽 */
 .card-actions .fl-btn {
 	flex: 1;
@@ -379,6 +537,47 @@ body {
 
 .fl-detail-top {
 	margin-bottom: 16px;
+}
+
+.fl-detail2--detail .fl-detail2__headline {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.fl-detail2--detail .fl-detail2__title {
+	margin: 0;
+	line-height: 1.2;
+	font-size: 30px;
+}
+
+.fl-detail2--detail .fl-shop-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	color: #555;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.fl-detail2--detail .fl-shop-link:hover {
+	color: #333;
+}
+
+.fl-detail2--detail .fl-shop-logo {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	background: rgba(0, 0, 0, 0.04);
+	color: #666;
+}
+
+.fl-detail2--detail .fl-detail2__row1 {
+	align-items: flex-start;
 }
 
 .fl-back {
@@ -439,8 +638,8 @@ body {
 .fl-detail2__price {
 	margin-top: 12px;
 	display: flex;
-	gap: 10px;
-	align-items: baseline;
+	gap: 18px;
+	align-items: flex-end;
 	flex-wrap: wrap;
 }
 
@@ -459,6 +658,44 @@ body {
 	font-size: 20px;
 }
 
+.fl-detail2--detail .fl-detail2__price {
+	margin-top: 14px;
+	gap: 24px;
+}
+
+.fl-detail2--detail .fl-price-current {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.fl-detail2--detail .fl-price-was {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.fl-detail2--detail .fl-price-label {
+	font-size: 12px;
+	color: #777;
+	letter-spacing: 0.02em;
+}
+
+.fl-detail2--detail .fl-price-offer {
+	font-size: 28px;
+	font-weight: 900;
+	color: #222;
+}
+
+.fl-detail2--detail .fl-price-normal {
+	font-size: 13px;
+	color: #999;
+}
+
+.fl-detail2--detail .fl-price-normal.is-empty {
+	text-decoration: none;
+}
+
 /* 区块 */
 .fl-detail2__block {
 	margin-top: 18px;
@@ -474,6 +711,17 @@ body {
 	line-height: 1.9;
 	white-space: pre-line;
 	/* ✅ 保留换行 */
+}
+
+.fl-detail2--detail .fl-detail2__block {
+	margin-top: 22px;
+}
+
+.fl-detail2--detail .fl-detail2__section-title {
+	margin: 0 0 8px;
+	font-size: 13px;
+	color: #666;
+	letter-spacing: 0.04em;
 }
 
 /* 受取信息行 */
@@ -532,6 +780,34 @@ body {
 
 .fl-time {
 	font-weight: 400;
+}
+
+.fl-detail2--detail .fl-info-row {
+	grid-template-columns: 110px 1fr;
+	gap: 12px 16px;
+	padding: 8px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.fl-detail2--detail .fl-info-row:last-child {
+	border-bottom: none;
+}
+
+.fl-detail2--detail .fl-info-k {
+	color: #666;
+	font-weight: 600;
+}
+
+.fl-detail2--detail .fl-info-v {
+	color: #222;
+	line-height: 1.7;
+}
+
+.fl-detail2--detail .fl-map-link {
+	margin-left: 8px;
+	font-size: 12px;
+	color: #888;
+	text-decoration: underline;
 }
 
 /* Back link 返回键(FoodLink theme) */
@@ -1012,5 +1288,207 @@ body {
 
 	.fl-slide__title {
 		font-size: 20px;
+	}
+}
+
+/* ===== Receiver History (card list) ===== */
+.fl-history-list {
+	margin-top: 18px;
+	display: grid;
+	gap: 14px;
+}
+
+.fl-history-card {
+	background: #FFFEFC;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 16px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	padding: 12px 16px 14px;
+}
+
+.fl-history-meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	font-size: 12px;
+	color: #666;
+	background: rgba(0, 0, 0, 0.03);
+	padding: 6px 10px;
+	margin: -12px -16px 10px;
+	border-top-left-radius: 16px;
+	border-top-right-radius: 16px;
+}
+
+.fl-history-meta-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.fl-meta-sep {
+	opacity: 0.6;
+}
+
+.fl-meta-shop {
+	max-width: 320px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.fl-history-status {
+	display: flex;
+	align-items: center;
+}
+
+.fl-status-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 700;
+	background: rgba(0, 0, 0, 0.04);
+	color: #444;
+}
+
+.fl-status-reserved {
+	color: #b26b00;
+	background: rgba(255, 152, 0, 0.12);
+}
+
+.fl-status-completed {
+	color: #2e7d32;
+	background: rgba(46, 125, 50, 0.10);
+}
+
+.fl-status-cancelled {
+	color: #c62828;
+	background: rgba(198, 40, 40, 0.10);
+}
+
+.fl-status-expired {
+	color: #666;
+	background: rgba(0, 0, 0, 0.08);
+}
+
+.fl-history-body {
+	margin-top: 8px;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 16px;
+	align-items: center;
+}
+
+.fl-history-item {
+	display: grid;
+	grid-template-columns: 84px 1fr;
+	gap: 12px;
+	align-items: center;
+}
+
+.fl-history-thumb {
+	width: 84px;
+	height: 64px;
+	border-radius: 10px;
+	background: linear-gradient(135deg, #f2f0ea, #e7e1d6);
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	overflow: hidden;
+}
+
+.fl-history-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.fl-history-info {
+	min-width: 0;
+}
+
+.fl-history-name {
+	font-size: 16px;
+	font-weight: 800;
+	color: #222;
+	margin-bottom: 4px;
+}
+
+.fl-history-place {
+	font-size: 12px;
+	color: #666;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.fl-history-side {
+	text-align: right;
+	display: grid;
+	gap: 8px;
+	justify-items: end;
+	min-width: 140px;
+}
+
+.fl-history-qty {
+	font-size: 12px;
+	color: #777;
+}
+
+.fl-history-amount {
+	font-size: 16px;
+	font-weight: 800;
+	color: #333;
+}
+
+.fl-history-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+}
+
+.fl-actions-empty {
+	display: inline-block;
+	min-width: 40px;
+	text-align: center;
+	color: #999;
+}
+
+.fl-history-empty {
+	text-align: center;
+	color: #666;
+	padding: 24px 0;
+}
+
+.fl-muted {
+	color: #999;
+}
+
+@media (max-width: 900px) {
+	.fl-history-body {
+		grid-template-columns: 1fr;
+	}
+
+	.fl-history-side {
+		justify-items: start;
+		text-align: left;
+	}
+}
+
+@media (max-width: 640px) {
+	.fl-history-card {
+		padding: 12px;
+	}
+
+	.fl-history-item {
+		grid-template-columns: 64px 1fr;
+	}
+
+	.fl-history-thumb {
+		width: 64px;
+		height: 52px;
 	}
 }

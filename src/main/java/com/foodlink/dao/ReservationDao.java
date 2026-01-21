@@ -135,17 +135,65 @@ public class ReservationDao {
      * JP：true は更新成功 / CN：true 表示更新成功
      */
     public boolean cancelReservation(int reservationId, int receiverId) {
-        String sql = """
+        String sqlSelect = """
+                    SELECT food_id, quantity
+                    FROM reservations
+                    WHERE id = ? AND receiver_id = ? AND status = 'RESERVED'
+                    FOR UPDATE
+                """;
+        String sqlUpdateReservation = """
                     UPDATE reservations
                     SET status = 'CANCELLED'
                     WHERE id = ? AND receiver_id = ? AND status = 'RESERVED'
                 """;
+        String sqlRestoreStock = """
+                    UPDATE foods
+                    SET quantity = quantity + ?,
+                        status = CASE
+                                   WHEN (pickup_end IS NULL OR pickup_end > NOW()) AND quantity + ? > 0 THEN 'OPEN'
+                                   ELSE status
+                                 END
+                    WHERE id = ?
+                """;
 
-        try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, reservationId);
-            ps.setInt(2, receiverId);
-            int updated = ps.executeUpdate();
-            return updated > 0;
+        try (Connection con = DBUtil.getConnection()) {
+            con.setAutoCommit(false);
+
+            int foodId;
+            int qty;
+            try (PreparedStatement ps = con.prepareStatement(sqlSelect)) {
+                ps.setInt(1, reservationId);
+                ps.setInt(2, receiverId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        con.rollback();
+                        return false;
+                    }
+                    foodId = rs.getInt("food_id");
+                    qty = rs.getInt("quantity");
+                }
+            }
+
+            int updated;
+            try (PreparedStatement ps = con.prepareStatement(sqlUpdateReservation)) {
+                ps.setInt(1, reservationId);
+                ps.setInt(2, receiverId);
+                updated = ps.executeUpdate();
+            }
+            if (updated != 1) {
+                con.rollback();
+                return false;
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(sqlRestoreStock)) {
+                ps.setInt(1, qty);
+                ps.setInt(2, qty);
+                ps.setInt(3, foodId);
+                ps.executeUpdate();
+            }
+
+            con.commit();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -196,9 +244,11 @@ public class ReservationDao {
                       r.reserve_at,
                       r.status,
                       f.name AS food_name,
-                      f.pickup_location
+                      c.address AS company_address
                     FROM reservations r
                     JOIN foods f ON f.id = r.food_id
+                    LEFT JOIN users u ON u.id = f.provider_id
+                    LEFT JOIN companies c ON c.id = u.company_id
                     WHERE r.id = ?
                     LIMIT 1
                 """;
@@ -216,7 +266,123 @@ public class ReservationDao {
                 v.id = rs.getInt("id");
                 v.code = rs.getString("reservation_code");
                 v.foodName = rs.getString("food_name");
-                v.pickupLocation = rs.getString("pickup_location");
+                v.companyAddress = rs.getString("company_address");
+                v.quantity = rs.getInt("quantity");
+                v.unitPrice = rs.getInt("unit_price");
+                v.totalPrice = rs.getInt("total_price");
+                v.pickupTime = rs.getTimestamp("pickup_time");
+                v.reserveAt = rs.getTimestamp("reserve_at");
+                v.status = rs.getString("status");
+                return v;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * JP：予約詳細（受取者権限チェック込み）/ CN：预约详情（含用户权限）
+     */
+    public ReservationView findReservationViewByIdAndReceiverId(int reservationId, int receiverId) {
+        String sql = """
+                    SELECT
+                      r.id,
+                      r.reservation_code,
+                      r.quantity,
+                      r.unit_price,
+                      r.total_price,
+                      r.pickup_time,
+                      r.reserve_at,
+                      r.status,
+                      f.name AS food_name,
+                      c.address AS company_address,
+                      c.name AS company_name,
+                      p.image_path AS image_path
+                    FROM reservations r
+                    JOIN foods f ON f.id = r.food_id
+                    JOIN products p ON f.product_id = p.id
+                    LEFT JOIN users u ON u.id = f.provider_id
+                    LEFT JOIN companies c ON c.id = u.company_id
+                    WHERE r.id = ? AND r.receiver_id = ?
+                    LIMIT 1
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, reservationId);
+            ps.setInt(2, receiverId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                ReservationView v = new ReservationView();
+                v.id = rs.getInt("id");
+                v.code = rs.getString("reservation_code");
+                v.foodName = rs.getString("food_name");
+                v.companyAddress = rs.getString("company_address");
+                v.companyName = rs.getString("company_name");
+                v.imagePath = rs.getString("image_path");
+                v.quantity = rs.getInt("quantity");
+                v.unitPrice = rs.getInt("unit_price");
+                v.totalPrice = rs.getInt("total_price");
+                v.pickupTime = rs.getTimestamp("pickup_time");
+                v.reserveAt = rs.getTimestamp("reserve_at");
+                v.status = rs.getString("status");
+                return v;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * JP：予約詳細（予約番号 + 受取者）/ CN：预约详情（预约号 + 用户）
+     */
+    public ReservationView findReservationViewByCodeAndReceiverId(String code, int receiverId) {
+        String sql = """
+                    SELECT
+                      r.id,
+                      r.reservation_code,
+                      r.quantity,
+                      r.unit_price,
+                      r.total_price,
+                      r.pickup_time,
+                      r.reserve_at,
+                      r.status,
+                      f.name AS food_name,
+                      c.address AS company_address,
+                      c.name AS company_name,
+                      p.image_path AS image_path
+                    FROM reservations r
+                    JOIN foods f ON f.id = r.food_id
+                    JOIN products p ON f.product_id = p.id
+                    LEFT JOIN users u ON u.id = f.provider_id
+                    LEFT JOIN companies c ON c.id = u.company_id
+                    WHERE r.reservation_code = ? AND r.receiver_id = ?
+                    LIMIT 1
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, code);
+            ps.setInt(2, receiverId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                ReservationView v = new ReservationView();
+                v.id = rs.getInt("id");
+                v.code = rs.getString("reservation_code");
+                v.foodName = rs.getString("food_name");
+                v.companyAddress = rs.getString("company_address");
+                v.companyName = rs.getString("company_name");
+                v.imagePath = rs.getString("image_path");
                 v.quantity = rs.getInt("quantity");
                 v.unitPrice = rs.getInt("unit_price");
                 v.totalPrice = rs.getInt("total_price");
@@ -246,9 +412,14 @@ public class ReservationDao {
                       r.reserve_at,
                       r.status,
                       f.name AS food_name,
-                      f.pickup_location
+                      c.address AS company_address,
+                      c.name AS company_name,
+                      p.image_path AS image_path
                     FROM reservations r
                     JOIN foods f ON f.id = r.food_id
+                    JOIN products p ON f.product_id = p.id
+                    LEFT JOIN users u ON u.id = f.provider_id
+                    LEFT JOIN companies c ON c.id = u.company_id
                     WHERE r.receiver_id = ?
                     ORDER BY r.reserve_at DESC
                 """;
@@ -262,7 +433,9 @@ public class ReservationDao {
                     v.id = rs.getInt("id");
                     v.code = rs.getString("reservation_code");
                     v.foodName = rs.getString("food_name");
-                    v.pickupLocation = rs.getString("pickup_location");
+                    v.companyAddress = rs.getString("company_address");
+                    v.companyName = rs.getString("company_name");
+                    v.imagePath = rs.getString("image_path");
                     v.quantity = rs.getInt("quantity");
                     v.unitPrice = rs.getInt("unit_price");
                     v.totalPrice = rs.getInt("total_price");
@@ -282,7 +455,7 @@ public class ReservationDao {
      * JP：商家用 予約一覧（任意フィルタ）
      * CN：商家端预约列表（可选过滤）
      */
-    public List<ProviderReservationRow> findProviderReservations(int providerId, String status, String pickupDate) {
+    public List<ProviderReservationRow> findProviderReservations(int providerId, String status, String pickupDate, String period, int page, int size) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append("  r.id, r.reservation_code, r.reserve_at, r.pickup_time, ");
@@ -292,23 +465,14 @@ public class ReservationDao {
         sql.append("FROM reservations r ");
         sql.append("JOIN foods f ON r.food_id = f.id ");
         sql.append("LEFT JOIN users u ON r.receiver_id = u.id ");
-        sql.append("WHERE f.provider_id = ? ");
-
         List<Object> params = new ArrayList<>();
-        params.add(providerId);
-
-        if (status != null && !status.isEmpty() && !"ALL".equalsIgnoreCase(status)) {
-            sql.append("AND r.status = ? ");
-            params.add(status);
-        }
-
-        if (pickupDate != null && !pickupDate.isEmpty()) {
-            // JP：日付で絞り込み / CN：按日期筛选
-            sql.append("AND DATE(r.pickup_time) = ? ");
-            params.add(pickupDate);
-        }
+        appendProviderReservationFilters(sql, params, providerId, status, pickupDate, period);
 
         sql.append("ORDER BY r.reserve_at DESC ");
+        sql.append("LIMIT ? OFFSET ? ");
+        int offset = (page - 1) * size;
+        params.add(size);
+        params.add(offset);
 
         List<ProviderReservationRow> list = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
@@ -337,6 +501,62 @@ public class ReservationDao {
         }
     }
 
+    public int countProviderReservations(int providerId, String status, String pickupDate, String period) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) FROM reservations r ");
+        sql.append("JOIN foods f ON r.food_id = f.id ");
+        sql.append("LEFT JOIN users u ON r.receiver_id = u.id ");
+        List<Object> params = new ArrayList<>();
+        appendProviderReservationFilters(sql, params, providerId, status, pickupDate, period);
+
+        try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void appendProviderReservationFilters(StringBuilder sql, List<Object> params, int providerId, String status, String pickupDate, String period) {
+        sql.append("WHERE f.provider_id = ? ");
+        params.add(providerId);
+
+        if (status != null && !status.isEmpty() && !"ALL".equalsIgnoreCase(status)) {
+            sql.append("AND r.status = ? ");
+            params.add(status);
+        }
+
+        if (pickupDate != null && !pickupDate.isEmpty()) {
+            sql.append("AND DATE(r.pickup_time) = ? ");
+            params.add(pickupDate);
+        }
+
+        // 期間フィルタ：pickup_time 基準 / CN：按受取予定日時筛选
+        if (period != null && !"ALL".equalsIgnoreCase(period)) {
+            switch (period) {
+                case "TODAY" -> {
+                    sql.append("AND DATE(r.pickup_time) = CURDATE() ");
+                }
+                case "7" -> {
+                    sql.append("AND r.pickup_time BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");
+                }
+                case "30" -> {
+                    sql.append("AND r.pickup_time BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY) ");
+                }
+                default -> {
+                    // no-op for unknown
+                }
+            }
+        }
+    }
+
     /**
      * JP：商家用 受取済み更新（RESERVEDのみ）
      * CN：商家端确认受取（仅RESERVED）
@@ -354,6 +574,70 @@ public class ReservationDao {
             ps.setInt(2, providerId);
             int updated = ps.executeUpdate();
             return updated == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * JP：期限切れ予約を自動更新（RESERVED -> EXPIRED）
+     * CN：自动将过期预约更新为 EXPIRED（RESERVED -> EXPIRED）
+     */
+    public int expireOverdueReservations(int graceMinutes) {
+        // JP：Java側で締切時刻を計算 / CN：在Java侧计算截止时间
+        long cutoffMillis = System.currentTimeMillis() - (graceMinutes * 60L * 1000L);
+        Timestamp cutoff = new Timestamp(cutoffMillis);
+
+        String sqlSelect = """
+                    SELECT id, food_id, quantity
+                    FROM reservations
+                    WHERE status = 'RESERVED'
+                      AND pickup_time IS NOT NULL
+                      AND pickup_time < ?
+                """;
+        String sqlUpdateReservation = """
+                    UPDATE reservations
+                    SET status = 'EXPIRED'
+                    WHERE id = ? AND status = 'RESERVED' AND pickup_time < ?
+                """;
+        String sqlRestoreStock = """
+                    UPDATE foods
+                    SET quantity = quantity + ?
+                    WHERE id = ?
+                """;
+
+        try (Connection con = DBUtil.getConnection()) {
+            con.setAutoCommit(false);
+            int updatedCount = 0;
+
+            try (PreparedStatement psSelect = con.prepareStatement(sqlSelect)) {
+                psSelect.setTimestamp(1, cutoff);
+                try (ResultSet rs = psSelect.executeQuery()) {
+                    while (rs.next()) {
+                        int reservationId = rs.getInt("id");
+                        int foodId = rs.getInt("food_id");
+                        int qty = rs.getInt("quantity");
+
+                        try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateReservation)) {
+                            psUpdate.setInt(1, reservationId);
+                            psUpdate.setTimestamp(2, cutoff);
+                            int rows = psUpdate.executeUpdate();
+                            if (rows == 1) {
+                                // JP：期限切れ確定時のみ在庫を戻す / CN：仅在成功过期时恢复库存
+                                try (PreparedStatement psRestore = con.prepareStatement(sqlRestoreStock)) {
+                                    psRestore.setInt(1, qty);
+                                    psRestore.setInt(2, foodId);
+                                    psRestore.executeUpdate();
+                                }
+                                updatedCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            con.commit();
+            return updatedCount;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -396,7 +680,9 @@ public class ReservationDao {
         public int id;
         public String code;
         public String foodName;
-        public String pickupLocation;
+        public String companyAddress;
+        public String companyName;
+        public String imagePath;
         public int quantity;
         public int unitPrice;
         public int totalPrice;
@@ -417,8 +703,16 @@ public class ReservationDao {
             return foodName;
         }
 
-        public String getPickupLocation() {
-            return pickupLocation;
+        public String getCompanyAddress() {
+            return companyAddress;
+        }
+
+        public String getCompanyName() {
+            return companyName;
+        }
+
+        public String getImagePath() {
+            return imagePath;
         }
 
         public int getQuantity() {
